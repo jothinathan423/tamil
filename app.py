@@ -46,18 +46,19 @@ def predict():
     ph=float(request.form['PH'])
     r=float(request.form['Rainfall'])
     data = np.array([[n,p,k,t,h,ph,r]])
-   
+
     prediction = model.predict( sc.transform(data) )
     prediction_str = prediction[0]
     print(prediction_str)
-    
-    
-    
-    prediction_str =  "You can use " + prediction_str + " Crop"
+
+
+
+    prediction_str =  "You can use <br>" + prediction_str + "<br> Crop"+"<br>Nitrogen Content"+str(n)
 
     output = prediction_str
+    print(output)
 
-    return render_template('index.html', prediction_text='{}'.format(output))
+    return render_template('index.html', prediction_text=output)
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -66,11 +67,13 @@ def search():
     if not crop_data.empty:
         crop_data = crop_data.iloc[:, :7]
         crop_data.reset_index(drop=True, inplace=True)
-        rows = [row.to_string(index=False) for _, row in crop_data.iterrows()]
+        rows = []
+        for _, row in crop_data.iterrows():
+            rows.append([value for value in row])
+            print(rows)
         return render_template('index.html', rows=rows)
     else:
         return "Label not found in the dataset"
-
 
 
 if __name__ == "__main__":

@@ -37,7 +37,7 @@
 
                 <label for="ph" class="form-label ">P<sup>H</sup></label>
                 <input type="text" id="ph" required placeholder="PH level" class="form-control" name="PH">
-                
+
                 <label for="rainfall" class="form-label ">Rainfall</label>
                 <input type="text" required id="rainfall" placeholder="Rainfall level" class="form-control" name="Rainfall">
 
@@ -58,10 +58,10 @@
                     Predicted Crop
                 </div>
                 <div class="card-body text-dark  h2 ">
-                 <center> 
-                    {{ prediction_text }}
+                 <center>
+                    {{ prediction_text|safe }}
 
-                     
+
    </center>
                 </div>
             </div>
@@ -69,7 +69,7 @@
 
         <div class="col-2"></div>
 
-        
+
 
 
         <div class="col-4">
@@ -81,7 +81,7 @@
                     <form action="{{ url_for('search')}}" method="post">
                     <label for="cropselect" class="form-label">Select Crop</label>
                     <select name="cropselect" class="form-select" id="cropselect">
-                
+
                         <option disabled>select which plant want to crop</option>
                         <option value="rice">rice</option>
                         <option value="maize">maize</option>
@@ -107,9 +107,22 @@
                         <option value="coffee">coffee</option>
 
                     </select>
-                    {% for row in rows %}
-                    <p>{{ row | safe }}</p><br>  
-                {% endfor %}
+                    {% if rows %}
+                    <h2>Crop Data:</h2>
+                    <ul style="list-style-type: none; padding: 1;">
+                        {% for row in rows %}
+                            <li>
+                                <ul style=" padding: 0;">
+                                    {% for value in row %}
+                                        <li>{{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+
                     <div class="mt-4">
                         <center>
                     <button class="btn btn-primary " type="submit">FIND</button>
@@ -125,8 +138,137 @@
 
     </div>
 
+    <div class="row">
+        <div class="col">
+    <div class="container pt-5 pb-5 bg-white">
+        <form id="labelForm">
+            <center><p class="h3 text-success  ">Comparing crop with your soil</p></center>
+            <label for="labels" class="form-label ">Select a label:</label>
+            <select id="labels" name="labels" class="form-select ">
+                <option value="rice">rice</option>
+                        <option value="maize">maize</option>
+                        <option value="chickpea">chickpea</option>
+                        <option value="kidneybeans">kidneybeans</option>
+                        <option value="pigeonpeas">pigeonpeas</option>
+                        <option value="mothbeans">mothbeans</option>
+                        <option value="mungbean">mungbean</option>
+                        <option value="blackgram">blackgram</option>
+                        <option value="lentila">lentila</option>
+                        <option value="pomegranate">pomegranate</option>
+                        <option value="banana">banana</option>
+                        <option value="mango">mango</option>
+                        <option value="grapes">grapes</option>
+                        <option value="watermelon">watermelon</option>
+                        <option value="muskmelon">muskmelon</option>
+                        <option value="apple">apple</option>
+                        <option value="orange">orange</option>
+                        <option value="papaya">papaya</option>
+                        <option value="coconut">coconut</option>
+                        <option value="cotton">cotton</option>
+                        <option value="jute">jute</option>
+                        <option value="coffee">coffee</option>
+
+            </select>
+            <br>
+            <label class="form-label  " for="N">N:</label>
+            <input type="number" class="form-control " id="N" name="N" required>
+            <br>
+            <label class="form-label " for="P">P:</label>
+            <input type="number" class="form-control " id="P" name="P" required>
+            <br>
+            <label class="form-label " for="K">K:</label>
+            <input class="form-control " type="number" id="K" name="K" required>
+            <br>
+            <label class="form-label " for="temperature">Temperature:</label>
+            <input type="number" class="form-control" id="temperature" name="temperature" step="any" required>
+            <br>
+            <label class="form-label " for="humidity">Humidity:</label>
+            <input type="number" class="form-control " id="humidity" name="humidity" step="any" required>
+            <br>
+            <label class="form-label " for="ph">pH:</label>
+            <input type="number" class="form-control " id="ph" name="ph" step="any" required>
+            <br>
+            <label class="form-label " for="rainfall">Rainfall:</label>
+            <input type="number" class="form-control " id="rainfall" name="rainfall" step="any" required>
+            <br>
+            <center>
+            <button class="btn btn-warning " type="submit">Submit</button>
+        </center>
+        </form>
+        <div id="result"></div>
+    </div>
+</div>
+</div>
+
+    <script>
+        document.getElementById('labelForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+        
+            const selectedLabel = document.getElementById('labels').value;
+        
+            const inputN = parseFloat(document.getElementById('N').value);
+            const inputP = parseFloat(document.getElementById('P').value);
+            const inputK = parseFloat(document.getElementById('K').value);
+            const inputTemperature = parseFloat(document.getElementById('temperature').value);
+            const inputHumidity = parseFloat(document.getElementById('humidity').value);
+            const inputPh = parseFloat(document.getElementById('ph').value);
+            const inputRainfall = parseFloat(document.getElementById('rainfall').value);
+        
+            const selectedData = dataset.find(data => data.label === selectedLabel);
+        
+            const resultElement = document.getElementById('result');
+            if (selectedData) {
+                const { N, P, K, temperature, humidity, ph, rainfall } = selectedData;
+                const resultN = inputN - N;
+                const resultP = inputP - P;
+                const resultK = inputK - K;
+                const resultTemperature = inputTemperature - temperature;
+                const resultHumidity = inputHumidity - humidity;
+                const resultPh = inputPh - ph;
+                const resultRainfall = inputRainfall - rainfall;
+                resultElement.innerHTML = `
+                    <p>Result for ${selectedLabel}:</p>
+                    <ul>
+                        <li>N: ${resultN}</li>
+                        <li>P: ${resultP}</li>
+                        <li>K: ${resultK}</li>
+                        <li>Temperature: ${resultTemperature}</li>
+                        <li>Humidity: ${resultHumidity}</li>
+                        <li>pH: ${resultPh}</li>
+                        <li>Rainfall: ${resultRainfall}</li>
+                    </ul>`;
+            } else {
+                resultElement.textContent = 'Label not found';
+            }
+        });
+        
+        const dataset = [
+        { N: 90, P: 42, K: 43, temperature: 20.87974371, humidity: 82.00274423, ph: 6.502985292, rainfall: 202.9355362, label: 'rice' },
+    { N: 71, P: 54, K: 16, temperature: 22.61359953, humidity: 63.69070564, ph: 5.749914421, rainfall: 87.75953857, label: 'maize' },
+    { N: 40, P: 72, K: 77, temperature: 17.02498456, humidity: 16.98861173, ph: 7.485996067, rainfall: 88.55123143, label: 'chickpea' },
+    { N: 13, P: 60, K: 25, temperature: 17.13692774, humidity: 20.59541693, ph: 5.68597166, rainfall: 128.256862, label: 'kidneybeans' },
+    { N: 3, P: 72, K: 24, temperature: 36.51268371, humidity: 57.92887167, ph: 6.03160778, rainfall: 122.6539694, label: 'pigeonpeas' },
+    { N: 3, P: 49, K: 18, temperature: 27.91095209, humidity: 64.70930606, ph: 3.692863601, rainfall: 32.67891866, label: 'mothbeans' },
+    { N: 19, P: 55, K: 20, temperature: 27.43329405, humidity: 87.80507732, ph: 7.18530147, rainfall: 54.73367631, label: 'mungbean' },
+    { N: 56, P: 79, K: 15, temperature: 29.48439992, humidity: 63.19915325, ph: 7.454532137, rainfall: 71.89090748, label: 'blackgram' },
+    { N: 32, P: 76, K: 15, temperature: 28.05153602, humidity: 63.49802189, ph: 7.604110177, rainfall: 43.35795377, label: 'lentila' },
+    { N: 2, P: 24, K: 38, temperature: 24.55981624, humidity: 91.63536236, ph: 5.922935513, rainfall: 111.9684622, label: 'pomegranate' },
+    { N: 91, P: 94, K: 46, temperature: 29.36792366, humidity: 76.24900101, ph: 6.149934034, rainfall: 92.82840911, label: 'banana' },
+    { N: 2, P: 40, K: 27, temperature: 29.73770045, humidity: 47.54885174, ph: 5.954626604, rainfall: 90.09586854, label: 'mango' },
+    { N: 24, P: 130, K: 195, temperature: 29.99677232, humidity: 81.54156612, ph: 6.112305667, rainfall: 67.12534492, label: 'grapes' },
+    { N: 119, P: 25, K: 51, temperature: 26.47330219, humidity: 80.92254421, ph: 6.283818329, rainfall: 53.65742581, label: 'watermelon' },
+    { N: 115, P: 17, K: 55, temperature: 27.57826922, humidity: 94.11878202, ph: 6.776533055, rainfall: 28.08253201, label: 'muskmelon' },
+    { N: 24, P: 128, K: 196, temperature: 22.75088787, humidity: 90.69489172, ph: 5.521466996, rainfall: 110.4317855, label: 'apple' },
+    { N: 22, P: 30, K: 12, temperature: 15.78144173, humidity: 92.51077745, ph: 6.354006744, rainfall: 119.035002, label: 'orange' },
+    { N: 61, P: 68, K: 50, temperature: 35.21462816, humidity: 91.49725058, ph: 6.793245417, rainfall: 243.0745066, label: 'papaya' },
+    { N: 18, P: 30, K: 29, temperature: 26.7627493, humidity: 92.86056895, ph: 6.420018717, rainfall: 224.5903664, label: 'coconut' },
+    { N: 133, P: 47, K: 24, temperature: 24.40228894, humidity: 79.19732001, ph: 7.231324765, rainfall: 90.8022356, label: 'cotton' },
+    { N: 89, P: 47, K: 38, temperature: 25.52468965, humidity: 72.24850829, ph: 6.002524871, rainfall: 151.8869972, label: 'jute' },
+    { N: 91, P: 21, K: 26, temperature: 26.33377983, humidity: 57.36469955, ph: 7.261313694, rainfall: 191.6549412, label: 'coffee' }
+        ];
+        </script>
+        
 
 
-    
 </body>
 </html>
