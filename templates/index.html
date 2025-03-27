@@ -83,6 +83,7 @@
                     <select name="cropselect" class="form-select" id="cropselect">
 
                         <option disabled>select which plant want to crop</option>
+                        <option value=""></option>
                         <option value="rice">rice</option>
                         <option value="maize">maize</option>
                         <option value="chickpea">chickpea</option>
@@ -143,9 +144,10 @@
     <div class="container pt-5 pb-5 bg-white">
         <form id="labelForm">
             <center><p class="h3 text-success  ">Comparing crop with your soil</p></center>
-            <label for="labels" class="form-label ">Select a label:</label>
+            <label for="labels" class="form-label ">Select a crop:</label>
             <select id="labels" name="labels" class="form-select ">
-                <option value="rice">rice</option>
+                        <option value=""></option>
+                        <option value="rice">rice</option>
                         <option value="maize">maize</option>
                         <option value="chickpea">chickpea</option>
                         <option value="kidneybeans">kidneybeans</option>
@@ -180,16 +182,16 @@
             <input class="form-control " type="number" id="K" name="K" required>
             <br>
             <label class="form-label " for="temperature">Temperature:</label>
-            <input type="number" class="form-control" id="temperature" name="temperature" step="any" required>
+            <input type="number" class="form-control" id="temp" name="temperature" step="any" required>
             <br>
             <label class="form-label " for="humidity">Humidity:</label>
-            <input type="number" class="form-control " id="humidity" name="humidity" step="any" required>
+            <input type="number" class="form-control " id="hum" name="humidity" step="any" required>
             <br>
             <label class="form-label " for="ph">pH:</label>
-            <input type="number" class="form-control " id="ph" name="ph" step="any" required>
+            <input type="number" class="form-control " id="phph" name="ph" step="any" required>
             <br>
             <label class="form-label " for="rainfall">Rainfall:</label>
-            <input type="number" class="form-control " id="rainfall" name="rainfall" step="any" required>
+            <input type="number" class="form-control " id="rain" name="rainfall" step="any" required>
             <br>
             <center>
             <button class="btn btn-warning " type="submit">Submit</button>
@@ -200,7 +202,7 @@
 </div>
 </div>
 
-    <script>
+   <script>
         document.getElementById('labelForm').addEventListener('submit', function(event) {
             event.preventDefault();
         
@@ -209,10 +211,10 @@
             const inputN = parseFloat(document.getElementById('N').value);
             const inputP = parseFloat(document.getElementById('P').value);
             const inputK = parseFloat(document.getElementById('K').value);
-            const inputTemperature = parseFloat(document.getElementById('temperature').value);
-            const inputHumidity = parseFloat(document.getElementById('humidity').value);
-            const inputPh = parseFloat(document.getElementById('ph').value);
-            const inputRainfall = parseFloat(document.getElementById('rainfall').value);
+            const inputTemperature = parseFloat(document.getElementById('temp').value);
+            const inputHumidity = parseFloat(document.getElementById('hum').value);
+            const inputPh = parseFloat(document.getElementById('phph').value);
+            const inputRainfall = parseFloat(document.getElementById('rain').value);
         
             const selectedData = dataset.find(data => data.label === selectedLabel);
         
@@ -243,7 +245,7 @@
         });
         
         const dataset = [
-        { N: 90, P: 42, K: 43, temperature: 20.87974371, humidity: 82.00274423, ph: 6.502985292, rainfall: 202.9355362, label: 'rice' },
+        { N: 90, P: 42, K: 43, temperature: 20.8431, humidity: 82.0723, ph: 6.50292, rainfall: 202.9362, label: 'rice' },
     { N: 71, P: 54, K: 16, temperature: 22.61359953, humidity: 63.69070564, ph: 5.749914421, rainfall: 87.75953857, label: 'maize' },
     { N: 40, P: 72, K: 77, temperature: 17.02498456, humidity: 16.98861173, ph: 7.485996067, rainfall: 88.55123143, label: 'chickpea' },
     { N: 13, P: 60, K: 25, temperature: 17.13692774, humidity: 20.59541693, ph: 5.68597166, rainfall: 128.256862, label: 'kidneybeans' },

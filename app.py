@@ -53,7 +53,7 @@ def predict():
 
 
 
-    prediction_str =  "You can use <br>" + prediction_str + "<br> Crop"+"<br>Nitrogen Content"+str(n)
+    prediction_str =  "You can use " + prediction_str + " Crop"+"<br><br>Nitrogen level - "+str(n) + "<br> Phosphorus level - " + str(p) + "<br> Pottasium level - " + str(k) + "<br> Temperature - " + str(t) + "<br> Humidity - " + str(h) + "<br> PH - " + str(ph) + "<br> Rainfall - " + str(r)
 
     output = prediction_str
     print(output)
@@ -68,7 +68,7 @@ def search():
         crop_data = crop_data.iloc[:, :7]
         crop_data.reset_index(drop=True, inplace=True)
         rows = []
-        for _, row in crop_data.iterrows():
+        for _   , row in crop_data.iterrows():
             rows.append([value for value in row])
             print(rows)
         return render_template('index.html', rows=rows)
